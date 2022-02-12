@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'my_app'
+
+    static_configs:
+      # the address is `myapp:3000` because the application
+      # will be run within docker-compose as `myapp` service
+      - targets: ['myapp:3000']

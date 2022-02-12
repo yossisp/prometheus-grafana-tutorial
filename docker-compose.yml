@@ -1,0 +1,38 @@
+version: "3"
+
+networks:
+  grafana:
+
+volumes:
+  prometheus_data: {}
+  grafana_data: {}
+
+services:
+  myapp:
+    build: .
+    ports:
+      - 3000:3000
+    networks:
+      - grafana
+
+  prometheus:
+    image: prom/prometheus:v2.21.0
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    ports:
+      - 9090:9090
+    networks:
+      - grafana
+
+  grafana:
+    image: grafana/grafana:7.3.6
+    ports:
+      - 3001:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - grafana
